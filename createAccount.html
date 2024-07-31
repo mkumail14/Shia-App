@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Create Account</title>
+    <link rel="stylesheet" href="authStyles.css">
+</head>
+<body>
+    <div id="loaderBox">
+        <div class="loader"></div>
+    </div>
+    <div id="visible">
+        <img style="width: 70%" src="blogVerseLogo.png">
+    <div class="container">
+        <div id="selectionBox" class="selection-box">
+            <div id="loginAlert" class="alert-box">Login</div>
+            <div id="createAccountAlert" class="alert-box">Create Account</div>
+        </div>
+        <div id="login-container" class="form-container">
+            <div name="form">
+                <h1>Login</h1>
+                <input id="loginEmail" type="email" placeholder="Email" required>
+                <input id="loginPassword" type="password" placeholder="Password" required>
+                <p style="color: red;" id="loginError"></p>
+                <button id="loginBtn" class="loginBtn">Login</button>
+                <a onclick="alertForgotPass()" class="forgot-pass">Forgot your password?</a>
+            </div>
+        </div>
+        <div id="register-container" class="form-container" style="display:none;">
+            <div name="Form">
+                <h1>Create Account</h1>
+                <h5>Upload your Profile Picture:</h5>
+                <input id="ppFileInput" type="file">
+                <input id="nameInput" type="text" placeholder="Name" required>
+                <input id="emailInput" type="email" placeholder="Email" required>
+                <h5>Enter your Date of Birth:</h5>
+                <input id="DOBinput" type="date" required>
+                <input id="passwordInput" type="password" placeholder="Password" required>
+                <p style="color: red;" id="registerError"></p>
+                <button id="createAccountBtn" class="createAccountBtn">Create Account</button>
+            </div> 
+        </div>
+    </div>
+    <img style="width: 70%" src="DevlopedByMKA-Logo.png">
+    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendSignInLinkToEmail } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
+
+       
+        const firebaseConfig = {
+          apiKey: "AIzaSyAASRPqPOOKHHbCbVX1VvUsfxA4MC82mGo",
+          authDomain: "shia-app-b0efc.firebaseapp.com",
+          projectId: "shia-app-b0efc",
+          storageBucket: "shia-app-b0efc.appspot.com",
+          messagingSenderId: "810375472701",
+          appId: "1:810375472701:web:53ccda30e2f29ecc17ec54",
+          measurementId: "G-KRVHZSKB5Q"
+        };      
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage();
+        document.getElementById('loaderBox').style.display = 'none';
+
+        document.getElementById('loginAlert').addEventListener('click', function() {
+            document.getElementById('loginAlert').style.backgroundColor = '#04f8ff4d';
+            document.getElementById('createAccountAlert').style.backgroundColor = 'white';
+            document.getElementById('register-container').style.display = 'none';
+            document.getElementById('login-container').style.display = 'flex';
+        });
+
+        document.getElementById('createAccountAlert').addEventListener('click', function() {
+            document.getElementById('createAccountAlert').style.backgroundColor = '#04f8ff4d';
+            document.getElementById('loginAlert').style.backgroundColor = 'white';
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('register-container').style.display = 'flex';
+        });
+
+        document.getElementById('loginAlert').click();
+
+        document.getElementById('createAccountBtn').addEventListener('click', async function() {
+            let Name = document.getElementById('nameInput').value.trim();
+            let Email = document.getElementById('emailInput').value.trim();
+            let Password = document.getElementById('passwordInput').value.trim();
+            let DOB = document.getElementById('DOBinput').value.trim();
+            let fileInput = document.getElementById('ppFileInput');
+            let file = fileInput.files[0];
+
+            if (Name === '' || Email === '' || Password === '' || DOB === '') {
+                document.getElementById('registerError').innerText = "Please fill up all the fields.";
+                return;
+            }
+            document.getElementById('visible').style.display = 'none';
+            document.getElementById('loaderBox').style.display = 'flex';
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, Email, Password);
+                const user = userCredential.user;
+
+                if (file) {
+                    const storageRef = ref(storage, `profile_pics/${user.uid}`);
+                    const uploadTask = uploadBytesResumable(storageRef, file);
+                    uploadTask.on('state_changed', 
+                        (snapshot) => {
+                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            console.log('Upload is ' + progress + '% done');
+                        }, 
+                        (error) => {
+                            console.error('Upload failed:', error);
+                        }, 
+                        async () => {
+                            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                            console.log('File available at', downloadURL);
+                            await setDoc(doc(db, "userData", user.uid), {
+                                email: Email,
+                                name: Name,
+                                DOB: DOB,
+                                profilePicture: downloadURL
+                            });
+                            console.log('Data set with pp');
+                            window.location.href = "createAccount.html";
+                        }
+                    );
+                } else {
+                    document.getElementById('visible').style.display = 'none';
+                    document.getElementById('loaderBox').style.display = 'flex';
+                    await setDoc(doc(db, "userData", user.uid), {
+                        email: Email,
+                        name: Name,
+                        DOB: DOB
+                    });
+                    console.log('Data set without pp');
+                    window.location.href = "createAccount.html";
+                }
+            } catch (error) {
+                document.getElementById('visible').style.display = 'flex';
+                document.getElementById('loaderBox').style.display = 'none';
+                document.getElementById('registerError').innerText = error.message;
+            }
+            document.getElementById('visible').style.display = 'flex';
+            document.getElementById('loaderBox').style.display = 'none';
+        });
+
+        document.getElementById('loginBtn').addEventListener('click', async function() {
+            let Email = document.getElementById('loginEmail').value;
+            let Password = document.getElementById('loginPassword').value;
+            if (Email.trim() === '' || Password.trim() === '') {
+                document.getElementById('loginError').innerText = "Please fill all the fields";
+            } else {
+                try {
+                    const userCredential = await signInWithEmailAndPassword(auth, Email, Password);
+                    const user = userCredential.user;
+                    window.location.href='index.html'
+                } catch (error) {
+                    document.getElementById('loginPassword').value = '';
+                    document.getElementById('loginError').innerText = error.message;
+                }
+            }
+        });
+
+        async function alertForgotPass() {
+            const ipAPI = "//api.ipify.org?format=json";
+            const response = await fetch(ipAPI);
+            const data = await response.json();
+            const inputValue = "";
+            const { value: email } = await Swal.fire({
+                title: "Forgot Password?",
+                input: "text",
+                inputLabel: "Enter your Email ID here.",
+                inputValue,
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    if (!value) {
+                        return "You need to write something!";
+                    }
+                }
+            });
+            if (email) {
+                let date = new Date();
+                await setDoc(doc(db, "forgotPasswordReq", email), {
+                    email: email,
+                    time: date
+                });
+                Swal.fire(`You will receive a mail at ${email} in 24 hours.`);
+            }
+        }
+
+        window.alertForgotPass = alertForgotPass;
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

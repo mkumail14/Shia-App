@@ -1,0 +1,164 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f6f5f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 768px;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.selection-box {
+    display: flex;
+    justify-content: center;
+    padding: 2%;
+    border-radius: 10px;
+}
+
+.alert-box {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 10%;
+}
+
+.form-container {
+    padding: 50px;
+    transition: all 0.6s ease-in-out;
+    display: none;
+}
+
+#login-container {
+    display: flex;
+}
+
+h1 {
+    font-weight: bold;
+    margin: 0;
+    color: #333;
+    width: max-content;
+}
+
+h5 {
+    margin: 0px;
+    margin-top: 30px;
+}
+
+input {
+    background-color: #eee;
+    border: none;
+    padding: 15px;
+    margin: 10px 0;
+    width: 100%;
+    border-radius: 5px;
+    outline: none;
+    font-size: 16px;
+}
+
+button {
+    border-radius: 20px;
+    border: 1px solid #4CAF50;
+    background-color: #4CAF50;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 15px 40px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.createAccountBtn {
+    border: 1px solid #008CBA;
+    background-color: #008CBA;
+}
+
+.createAccountBtn:hover {
+    background-color: #007bb5;
+}
+
+.forgot-pass {
+    color: #333;
+    font-size: 14px;
+    text-decoration: none;
+    margin-top: 20px;
+    display: block;
+}
+
+.forgot-pass:hover {
+    color: #008CBA;
+}
+
+.loader {
+    width: 50px;
+    padding: 8px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #04f8ff4d;
+    --_m: 
+      conic-gradient(#0000 10%,#000),
+      linear-gradient(#000 0 0) content-box;
+    -webkit-mask: var(--_m);
+            mask: var(--_m);
+    -webkit-mask-composite: source-out;
+            mask-composite: subtract;
+    animation: l3 1s infinite linear;
+  }
+  @keyframes l3 {to{transform: rotate(1turn)}}
+  #visible{
+    display: flex;
+}
+
+
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .form-container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 15px;
+    }
+
+    .alert-box {
+        width: 100%;
+        margin: 5px 0;
+        padding: 10px;
+    }
+    #visible{
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+

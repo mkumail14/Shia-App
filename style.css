@@ -1,0 +1,37 @@
+.slideshowImg{
+    width: 96%;
+    height: 300px;
+    margin: 2%;
+}
+
+/* Styling for the Login Button */
+.loginBtn {
+    background-color: #4CAF50; /* Green color */
+    color: white; /* White text */
+    padding: 10px 20px; /* More padding for a better look */
+    margin: 5px;
+    border: none;
+    border-radius: 25px; /* More rounded corners */
+    cursor: pointer; /* Cursor changes to pointer on hover */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.loginBtn:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+/* Styling for the Create Account Button */
+.createAccountBtn {
+    background-color: #008CBA; /* Blue color */
+    color: white; /* White text */
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.createAccountBtn:hover {
+    background-color: #007bb5; /* Darker blue on hover */
+}

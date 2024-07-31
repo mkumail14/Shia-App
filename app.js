@@ -67,5 +67,7 @@ async function logout(){
     window.location.href='index.html'
 }
 
+
+console.log(window.location.pathname)
 window.open=open;
 window.logout=logout;

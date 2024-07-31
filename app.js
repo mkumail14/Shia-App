@@ -41,6 +41,7 @@ let sec=0
 setInterval(function(){
 if(sec>4){
     sec=0;
+    console.log('changingSlide')
 }else if(sec==0){
     document.getElementById('img1').style.display='block';
     document.getElementById('img2').style.display='none';

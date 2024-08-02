@@ -36,7 +36,7 @@ const docSnap = await getDoc(docRef);
         console.log('Authentification Failed!')
     }
   });
-if(window.location.pathname=='/Shia-App/index.html' ||window.location.pathname=='/Shia-App/'){
+if(window.location.pathname=='/Shia-App/index.html' ||window.location.pathname=='/Shia-App/' || window.location.pathname=='/index.html'){
 let sec=0    
 setInterval(function(){
 if(sec>4){
